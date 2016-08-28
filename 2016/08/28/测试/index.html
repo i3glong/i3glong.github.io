@@ -391,7 +391,7 @@
         var duoshuoQuery = {short_name:"suselinux"};
         var loadComment = function(){
             var d = document, s = d.createElement('script');
-            s.src = 'http://www.3glong.com/js/embed.js';
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//www.3glong.com/js/embed.js';
             s.async = true; s.charset = 'UTF-8';
             (d.head || d.body).appendChild(s);
         }
