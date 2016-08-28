@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>幽龙博客</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://www.3glong.com/"/>
+  <updated>2016-08-28T13:40:35.000Z</updated>
+  <id>http://www.3glong.com/</id>
+  
+  <author>
+    <name>Yunlong Zhou</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>博客迁移github原先文章陆续恢复中</title>
+    <link href="http://www.3glong.com/2016/08/28/blog_transfer/"/>
+    <id>http://www.3glong.com/2016/08/28/blog_transfer/</id>
+    <published>2016-08-28T11:50:43.000Z</published>
+    <updated>2016-08-28T13:40:35.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="博客迁移至github"><a href="#博客迁移至github" class="headerlink" title="博客迁移至github"></a>博客迁移至github</h2><p>·markdown·目前还不大熟，之前文章正陆续整理。</p>
+<h2 id="hexo常用命令"><a href="#hexo常用命令" class="headerlink" title="hexo常用命令"></a>hexo常用命令</h2><p>创建一篇名为helloword的文章<br><code>hexo new helloworld</code><br>更新<br><code>hexo generate</code><br>启动本地服务器预览<br><code>hexo server</code><br>部署<br><code>hexo deploy</code></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;博客迁移至github&quot;&gt;&lt;a href=&quot;#博客迁移至github&quot; class=&quot;headerlink&quot; title=&quot;博客迁移至github&quot;&gt;&lt;/a&gt;博客迁移至github&lt;/h2&gt;&lt;p&gt;·markdown·目前还不大熟，之前文章正陆续整理。&lt;/p&gt;
+&lt;h
+    
+    </summary>
+    
+    
+      <category term="hexo" scheme="http://www.3glong.com/tags/hexo/"/>
+    
+      <category term="github" scheme="http://www.3glong.com/tags/github/"/>
+    
+  </entry>
+  
+</feed>

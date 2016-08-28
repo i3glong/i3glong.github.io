@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+    
+    <entry>
+      <title><![CDATA[博客迁移github原先文章陆续恢复中]]></title>
+      <url>http://www.3glong.com/2016/08/28/blog_transfer/</url>
+      <content type="html"><![CDATA[<h2 id="博客迁移至github"><a href="#博客迁移至github" class="headerlink" title="博客迁移至github"></a>博客迁移至github</h2><p>·markdown·目前还不大熟，之前文章正陆续整理。</p>
+<h2 id="hexo常用命令"><a href="#hexo常用命令" class="headerlink" title="hexo常用命令"></a>hexo常用命令</h2><p>创建一篇名为helloword的文章<br><code>hexo new helloworld</code><br>更新<br><code>hexo generate</code><br>启动本地服务器预览<br><code>hexo server</code><br>部署<br><code>hexo deploy</code></p>
+]]></content>
+    </entry>
+    
+  
+  
+</search>
