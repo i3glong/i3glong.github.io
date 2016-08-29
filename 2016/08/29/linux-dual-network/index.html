@@ -15,12 +15,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="幽龙博客">
-<meta property="og:url" content="http://www.3glong.com/tags/Linux/index.html">
+<meta name="description" content="教室的电脑网段是172.16.30.0/24      一些学习资料和yum源的ip是172.16.8.100默认的情况下教室的电脑是可以互通以及连接教学ftp172.16.8.100现在需要上网可是用安卓手机usb共享电脑上网后发现，172.16.30.0网段是通的，但就是上不了网，要上网就只能禁用eth0+">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决LINUX 双网卡无法上网问题小记">
+<meta property="og:url" content="http://www.3glong.com/2016/08/29/linux-dual-network/index.html">
 <meta property="og:site_name" content="幽龙博客">
+<meta property="og:description" content="教室的电脑网段是172.16.30.0/24      一些学习资料和yum源的ip是172.16.8.100默认的情况下教室的电脑是可以互通以及连接教学ftp172.16.8.100现在需要上网可是用安卓手机usb共享电脑上网后发现，172.16.30.0网段是通的，但就是上不了网，要上网就只能禁用eth0+">
+<meta property="og:updated_time" content="2016-08-29T13:28:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="幽龙博客">
+<meta name="twitter:title" content="解决LINUX 双网卡无法上网问题小记">
+<meta name="twitter:description" content="教室的电脑网段是172.16.30.0/24      一些学习资料和yum源的ip是172.16.8.100默认的情况下教室的电脑是可以互通以及连接教学ftp172.16.8.100现在需要上网可是用安卓手机usb共享电脑上网后发现，172.16.30.0网段是通的，但就是上不了网，要上网就只能禁用eth0+">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -52,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Tag: Linux | 幽龙博客</title>
+<title>解决LINUX 双网卡无法上网问题小记 | 幽龙博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -62,9 +66,9 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
-        isTag: true,
+        isTag: false,
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
         scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
@@ -283,134 +287,196 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-linux-dual-network" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2016/08/29/linux-dual-network/" class="archive-article-date">
-      <time datetime="2016-08-29T13:21:06.000Z" itemprop="datePublished">08-29</time>
+    <div class="article-meta">
+      <a href="/2016/08/29/linux-dual-network/" class="article-date">
+      <time datetime="2016-08-29T13:21:06.000Z" itemprop="datePublished">2016-08-29</time>
 </a>
 
 
-        </div>
-         
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/29/linux-dual-network/">解决LINUX 双网卡无法上网问题小记</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      解决LINUX 双网卡无法上网问题小记
     </h1>
   
 
-        <div class="article-info info-on-archive">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
     <div class="article-category tagcloud">
     <a class="article-category-link" href="/categories/Linux/">Linux</a>
     </div>
 
 
-          
+        
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/双网卡/">双网卡</a></li></ul>
     </div>
 
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><excerpt in="" index="" |="" 首页摘要=""><br>教室的电脑网段是172.16.30.0/24      一些学习资料和yum源的ip是172.16.8.100<br>默认的情况下教室的电脑是可以互通以及连接教学ftp172.16.8.100<br>现在需要上网可是用安卓手机usb共享电脑上网后发现，172.16.30.0网段是通的，但就是上不了网，要上网就只能禁用eth0+<a id="more"></a></excerpt></p>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<h2 id="场景："><a href="#场景：" class="headerlink" title="场景："></a>场景：</h2><p>教室的电脑网段是172.16.30.0/24<br>一些学习资料和yum源的ip是172.16.8.100<br>默认的情况下教室的电脑是可以互通以及连接教学ftp172.16.8.100<br>现在需要上网可是用安卓手机usb共享电脑上网后发现，172.16.30.0网段是通的，但就是上不了网，要上网就只能禁用eth0。。。。</p>
+<h3 id="网卡："><a href="#网卡：" class="headerlink" title="网卡："></a>网卡：</h3><ul>
+<li>电脑eth0  通过网线连接内网  172.16.30.0/24     网关172.16.30.254</li>
+<li>手机usb0  通过wifi连接外网  192.168.42.0/24    网关192.168.42.129</li>
+<li><p>最终效果：电脑连接老师VNC 正常连接教学资料ftp：172.16.8.100 正常 连接外网正常</p>
+</li>
+<li><p>包括kvm里192.168.122.0 网段也可以连通ftp了  而且连通外网正常</p>
+<h2 id="解决过程："><a href="#解决过程：" class="headerlink" title="解决过程："></a>解决过程：</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># route       #查看路由表</span></div><div class="line">Kernel IP routing table</div><div class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</div><div class="line">172.16.30.0     *               255.255.255.0   U     1      0        0 eth0</div><div class="line">192.168.42.0    *               255.255.255.0   U     1      0        0 usb0</div><div class="line">192.168.122.0   *               255.255.255.0   U     0      0        0 virbr0</div><div class="line">default         bogon           0.0.0.0         UG    0      0        0 eth0</div><div class="line">[root@localhost ~]<span class="comment"># route add default gw 192.168.42.129  #添加网关</span></div><div class="line">[root@localhost ~]<span class="comment"># route</span></div><div class="line">Kernel IP routing table</div><div class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</div><div class="line">172.16.30.0     *               255.255.255.0   U     1      0        0 eth0</div><div class="line">192.168.42.0    *               255.255.255.0   U     1      0        0 usb0</div><div class="line">192.168.122.0   *               255.255.255.0   U     0      0        0 virbr0</div><div class="line">default         bogon           0.0.0.0         UG    0      0        0 usb0</div><div class="line">default         bogon           0.0.0.0         UG    0      0        0 eth0</div><div class="line">[root@localhost ~]<span class="comment"># route add -net 192.168.42.0 netmask 255.255.255.0 dev usb0  #设置192.168.42.0网段默认使用usb0网卡</span></div><div class="line">[root@localhost ~]<span class="comment"># ping 172.16.8.100   #这个时候还是不通</span></div><div class="line">PING 172.16.8.100 (172.16.8.100) 56(84) bytes of data.</div><div class="line">^C</div><div class="line">--- 172.16.8.100 ping statistics ---</div><div class="line">2 packets transmitted, 0 received, 100% packet loss, time 1437ms</div><div class="line"></div><div class="line">[root@localhost ~]<span class="comment"># route add -net 172.16.8.0 netmask 255.255.255.0 dev eth0  #设置172.16.8.0网段默认使用eth0网卡     </span></div><div class="line">[root@localhost ~]<span class="comment"># ping 172.16.8.100</span></div><div class="line">PING 172.16.8.100 (172.16.8.100) 56(84) bytes of data.</div><div class="line">64 bytes from 172.16.8.100: icmp_seq=1 ttl=63 time=2.60 ms</div><div class="line">^C</div><div class="line">--- 172.16.8.100 ping statistics ---</div><div class="line">1 packets transmitted, 1 received, 0% packet loss, time 934ms</div><div class="line">rtt min/avg/max/mdev = 2.609/2.609/2.609/0.000 ms</div><div class="line">[root@localhost ~]<span class="comment"># route</span></div><div class="line">Kernel IP routing table</div><div class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</div><div class="line">172.16.30.0     *               255.255.255.0   U     1      0        0 eth0</div><div class="line">192.168.42.0    *               255.255.255.0   U     0      0        0 usb0</div><div class="line">192.168.42.0    *               255.255.255.0   U     1      0        0 usb0</div><div class="line">172.16.8.0      *               255.255.255.0   U     0      0        0 eth0</div><div class="line">192.168.122.0   *               255.255.255.0   U     0      0        0 virbr0</div><div class="line">default         bogon           0.0.0.0         UG    0      0        0 usb0</div><div class="line">default         bogon           0.0.0.0         UG    0      0        0 eth0</div><div class="line">[root@localhost ~]<span class="comment">#</span></div></pre></td></tr></table></figure></li>
+</ul>
+</the>
+      
+    </div>
+    
   </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/08/29/linux-dual-network/">解决LINUX 双网卡无法上网问题小记</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yunlong Zhou</a></p>
+        <p><span>发布时间:</span>2016-08-29, 21:21:06</p>
+        <p><span>最后更新:</span>2016-08-29, 21:28:43</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/08/29/linux-dual-network/" title="解决LINUX 双网卡无法上网问题小记">http://www.3glong.com/2016/08/29/linux-dual-network/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.3glong.com/2016/08/29/linux-dual-network/　　作者: Yunlong Zhou" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+
+
+        <span>更新历史:</span><i class="fa fa-github"></i>
+        <!-- 不同功能替换前面超链接即可，文件名不变 -->
+        <!-- 文件名生成: 2016-08-29"-"linux-dual-network -->
+        <a href="https://github.com/i3glong/blog_markdown-backup/blame/master/_posts/2016-08-29-linux-dual-network.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+        <a href="https://github.com/i3glong/blog_markdown-backup/commits/master/_posts/2016-08-29-linux-dual-network.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">&nbsp&nbsp&nbsp文本模式:</span><i class="fa fa-file-text-o"></i> 
+        <a href="https://raw.githubusercontent.com/i3glong/blog_markdown-backup/master/_posts/2016-08-29-linux-dual-network.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="CC BY-NC-SA 3.0 CN" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+        
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/29/proc-img/">
+                    Linux下proc目录详解
+                </a>
+            </div>
+        
+    </nav>
+
+  
 </article>
-  
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景："><span class="toc-number">1.</span> <span class="toc-text">场景：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#网卡："><span class="toc-number">1.1.</span> <span class="toc-text">网卡：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决过程："><span class="toc-number">2.</span> <span class="toc-text">解决过程：</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
     
+<div class="share">
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2016/08/29/proc-img/" class="archive-article-date">
-      <time datetime="2016-08-29T13:12:52.000Z" itemprop="datePublished">08-29</time>
-</a>
+
+    
+        <div class="addthis_sharing_toolbox"></div>
+    
+</div>
 
 
-        </div>
-         
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/29/proc-img/">Linux下proc目录详解</a>
-    </h1>
-  
 
-        <div class="article-info info-on-archive">
-          
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/29/linux-dual-network/" data-title="解决LINUX 双网卡无法上网问题小记" data-url="http://www.3glong.com/2016/08/29/linux-dual-network/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"suselinux"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//www.3glong.com/js/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/29/proc-img/" title="下一篇: Linux下proc目录详解">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
     </div>
 
-
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/proc/">proc</a></li></ul>
-    </div>
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2016/08/29/linux-file-command/" class="archive-article-date">
-      <time datetime="2016-08-29T12:23:04.000Z" itemprop="datePublished">08-29</time>
-</a>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/linux-dual-network/">解决LINUX 双网卡无法上网问题小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/proc-img/">Linux下proc目录详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/linux-file-command/">linux文件管理命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/pd-opensuse/">Mac下parallels desktop安装openSUSE过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/28/blog-transfer/">博客迁移github原先文章陆续恢复中</a></li></ul>
 
 
-        </div>
-         
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/29/linux-file-command/">linux文件管理命令</a>
-    </h1>
-  
-
-        <div class="article-info info-on-archive">
-          
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
 
 
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openSUSE/">openSUSE</a></li></ul>
-    </div>
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
