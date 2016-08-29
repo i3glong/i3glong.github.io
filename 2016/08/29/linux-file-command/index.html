@@ -15,12 +15,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="幽龙博客">
-<meta property="og:url" content="http://www.3glong.com/archives/index.html">
+<meta name="description" content="linux下各目录的作用，及常用命令用法整理总结。。+">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux文件管理命令">
+<meta property="og:url" content="http://www.3glong.com/2016/08/29/linux-file-command/index.html">
 <meta property="og:site_name" content="幽龙博客">
+<meta property="og:description" content="linux下各目录的作用，及常用命令用法整理总结。。+">
+<meta property="og:updated_time" content="2016-08-29T12:34:48.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="幽龙博客">
+<meta name="twitter:title" content="linux文件管理命令">
+<meta name="twitter:description" content="linux下各目录的作用，及常用命令用法整理总结。。+">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -52,7 +56,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Archives | 幽龙博客</title>
+<title>linux文件管理命令 | 幽龙博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -62,8 +66,8 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
-        isArchive: true,
+        isPost: true,
+        isArchive: false,
         isTag: false,
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
@@ -283,130 +287,206 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-linux-file-command" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2016/08/29/linux-file-command/" class="archive-article-date">
-      <time datetime="2016-08-29T12:23:04.000Z" itemprop="datePublished">08-29</time>
+    <div class="article-meta">
+      <a href="/2016/08/29/linux-file-command/" class="article-date">
+      <time datetime="2016-08-29T12:23:04.000Z" itemprop="datePublished">2016-08-29</time>
 </a>
 
 
-        </div>
-         
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/29/linux-file-command/">linux文件管理命令</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      linux文件管理命令
     </h1>
   
 
-        <div class="article-info info-on-archive">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
     <div class="article-category tagcloud">
     <a class="article-category-link" href="/categories/未分类/">未分类</a>
     </div>
 
 
-          
-        </div>
+        
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><excerpt in="" index="" |="" 首页摘要=""><br>linux下各目录的作用，及常用命令用法整理总结。。<br>+<a id="more"></a></excerpt></p>
+<p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
+<h2 id="根目录下文件夹"><a href="#根目录下文件夹" class="headerlink" title="根目录下文件夹"></a>根目录下文件夹</h2><h3 id="首先查看根下的各目录（以openSUSE42-1为例）"><a href="#首先查看根下的各目录（以openSUSE42-1为例）" class="headerlink" title="首先查看根下的各目录（以openSUSE42.1为例）"></a>首先查看根下的各目录（以openSUSE42.1为例）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">linux-vnja: <span class="comment"># ls /                      #列出根目录下所以文件</span></div><div class="line">bin   dev  home  lib64  opt   root  sbin     .snapshots  sys  usr</div><div class="line">boot  etc  lib   mnt    proc  run   selinux  srv         tmp  var</div></pre></td></tr></table></figure>
+<ul>
+<li>各目录的用处如下：</li>
+<li>bin 普通用户可以使用的二进制可执行命令</li>
+<li>dev 设备文件</li>
+<li>home 存放普通用户家目录的目录</li>
+<li>lib64 库文件（64位）</li>
+<li>opt 通常存放第三方软件</li>
+<li>root 管理员家目录</li>
+<li>sbin 管理员使用的命令</li>
+<li>.snapshots 快照</li>
+<li>sys 类似于proc</li>
+<li>usr 系统文件</li>
+<li>boot 存放系统启动相关文件 kernel，grub2等</li>
+<li>etc 配置文件目录</li>
+<li>lib 标准库文件</li>
+<li>mnt 手动挂载设备的挂载点</li>
+<li>proc 伪文件系统，只存于内存，为当前系统状态。</li>
+<li>run 系统启动以来描述系统信息的文件如pid</li>
+<li>selinux 如名字一样selinux的相关文件</li>
+<li>srv 服务所在位置 如 ftp  Apache2</li>
+<li>tmp 临时目录</li>
+<li>var 存放日志、邮件。。<h3 id="Linux文件的时间"><a href="#Linux文件的时间" class="headerlink" title="Linux文件的时间"></a>Linux文件的时间</h3>如下使用ls -l查看到的只是文件的创建时间<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">linux-vnja: <span class="comment"># ls -l test.txt</span></div><div class="line">-rw-r--r-- 1 root root 0 6月 24 04:44 test.txt</div><div class="line">linux-vnja: <span class="comment"># stat test.txt</span></div><div class="line">文件：<span class="string">"test.txt"</span></div><div class="line">大小：0 块：0          IO 块：4096 普通空文件</div><div class="line">设备：24h/36dInode：70173 硬链接：1</div><div class="line">权限：(0644/-rw-r--r--)  Uid：(    0/    root)   Gid：(    0/    root)</div><div class="line">最近访问：2016-06-24 04:44:45.373953389 +0800</div><div class="line">最近更改：2016-06-24 04:44:45.373953389 +0800</div><div class="line">最近改动：2016-06-24 04:44:45.373953389 +0800</div><div class="line">创建时间：-</div><div class="line"></div><div class="line">最近访问：time 指最后一次打开查看的时间</div><div class="line">最近修改：mtime 指最后一次修改文件内容的时间</div><div class="line">删除，新增替换等。。。</div><div class="line">最近改动：ctime 指最后一次改变文件属性的时间，（权限等）</div></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    
   </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/08/29/linux-file-command/">linux文件管理命令</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yunlong Zhou</a></p>
+        <p><span>发布时间:</span>2016-08-29, 20:23:04</p>
+        <p><span>最后更新:</span>2016-08-29, 20:34:48</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/08/29/linux-file-command/" title="linux文件管理命令">http://www.3glong.com/2016/08/29/linux-file-command/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.3glong.com/2016/08/29/linux-file-command/　　作者: Yunlong Zhou" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+
+
+        <span>更新历史:</span><i class="fa fa-github"></i>
+        <!-- 不同功能替换前面超链接即可，文件名不变 -->
+        <!-- 文件名生成: 2016-08-29"-"linux-file-command -->
+        <a href="https://github.com/i3glong/blog_markdown-backup/blame/master/_posts/2016-08-29-linux-file-command.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+        <a href="https://github.com/i3glong/blog_markdown-backup/commits/master/_posts/2016-08-29-linux-file-command.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">&nbsp&nbsp&nbsp文本模式:</span><i class="fa fa-file-text-o"></i> 
+        <a href="https://raw.githubusercontent.com/i3glong/blog_markdown-backup/master/_posts/2016-08-29-linux-file-command.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="CC BY-NC-SA 3.0 CN" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+        
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/29/pd-opensuse/">
+                    Mac下parallels desktop安装openSUSE过程
+                </a>
+            </div>
+        
+    </nav>
+
+  
 </article>
-  
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#根目录下文件夹"><span class="toc-number">1.</span> <span class="toc-text">根目录下文件夹</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#首先查看根下的各目录（以openSUSE42-1为例）"><span class="toc-number">1.1.</span> <span class="toc-text">首先查看根下的各目录（以openSUSE42.1为例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux文件的时间"><span class="toc-number">1.2.</span> <span class="toc-text">Linux文件的时间</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
     
+<div class="share">
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2016/08/29/pd-opensuse/" class="archive-article-date">
-      <time datetime="2016-08-29T11:03:14.000Z" itemprop="datePublished">08-29</time>
-</a>
+
+    
+        <div class="addthis_sharing_toolbox"></div>
+    
+</div>
 
 
-        </div>
-         
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/29/pd-opensuse/">Mac下parallels desktop安装openSUSE过程</a>
-    </h1>
-  
 
-        <div class="article-info info-on-archive">
-          
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/折腾笔记/">折腾笔记</a>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/29/linux-file-command/" data-title="linux文件管理命令" data-url="http://www.3glong.com/2016/08/29/linux-file-command/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"suselinux"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//www.3glong.com/js/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/29/pd-opensuse/" title="下一篇: Mac下parallels desktop安装openSUSE过程">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
     </div>
 
-
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openSUSE/">openSUSE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/parallels-desktop/">parallels desktop</a></li></ul>
-    </div>
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2016/08/28/blog-transfer/" class="archive-article-date">
-      <time datetime="2016-08-28T11:50:43.000Z" itemprop="datePublished">08-28</time>
-</a>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/linux-file-command/">linux文件管理命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/pd-opensuse/">Mac下parallels desktop安装openSUSE过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/28/blog-transfer/">博客迁移github原先文章陆续恢复中</a></li></ul>
 
 
-        </div>
-         
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/28/blog-transfer/">博客迁移github原先文章陆续恢复中</a>
-    </h1>
-  
-
-        <div class="article-info info-on-archive">
-          
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/随笔/">随笔</a>
-    </div>
 
 
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github/">github</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
-    </div>
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
