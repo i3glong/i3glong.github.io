@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.3glong.com/"/>
-  <updated>2016-08-29T11:55:47.000Z</updated>
+  <updated>2016-08-29T12:06:57.000Z</updated>
   <id>http://www.3glong.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.3glong.com/2016/08/29/pd-opensuse/"/>
     <id>http://www.3glong.com/2016/08/29/pd-opensuse/</id>
     <published>2016-08-29T11:03:14.000Z</published>
-    <updated>2016-08-29T11:55:47.000Z</updated>
+    <updated>2016-08-29T12:06:57.000Z</updated>
     
     <content type="html"><![CDATA[<p><excerpt in="" index="" |="" 首页摘要=""><br>+MacBook最近刚重装了系统，新安装parallels desktop虚拟机第一时间安装openSUSE42.1。这篇博文就记录下过程吧。<a id="more"></a></excerpt></p>
 <p><the rest="" of="" contents="" |="" 余下全文=""></the></p>
@@ -32,7 +32,7 @@
 <h2 id="安装后配置"><a href="#安装后配置" class="headerlink" title="安装后配置"></a>安装后配置</h2><pre><code>新建虚拟机、安装系统过程略
 </code></pre><h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>配置软件源，官方源太慢我用的是阿里云的镜像源<br>地址是  <a href="http://mirrors.aliyun.com/" target="_blank" rel="external">http://mirrors.aliyun.com/</a><br>然后更新重启，安装内核devel包gcc等工具。<br>还有个烦人的玩意儿就是kde有下角那个提示更新的货，果断干掉。<br>那个包的名字是plasma5-pk-updates,删除后注销再登录世界就清净了。</p>
 <h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>就是虚拟机下openSUSE分辨率问题，始终就那么小是因为驱动问题。<br>安装parallels tools即可解决</p>
-<h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>快照指，因为接下来还不知道会折腾什么呢？虚拟机一定做好快照出问题好恢复。</p>
+<h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>快照之，因为接下来还不知道会折腾什么呢？虚拟机一定做好快照出问题好恢复。</p>
 ]]></content>
     
     <summary type="html">
