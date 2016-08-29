@@ -13,15 +13,16 @@
 <li>parallels desktop虚拟机</li>
 <li>openSUSE42.1安装镜像 </li>
 </ul>
-<h2 id="安装后配置"><a href="#安装后配置" class="headerlink" title="安装后配置"></a>安装后配置</h2><p><code>新建虚拟机、安装系统过程略</code></p>
-<p>###第一步<br>配置软件源，官方源太慢我用的是阿里云的镜像源<br>地址是  <a href="http://mirrors.aliyun.com/" target="_blank" rel="external">http://mirrors.aliyun.com/</a></p>
+<h2 id="安装后配置"><a href="#安装后配置" class="headerlink" title="安装后配置"></a>安装后配置</h2><pre><code>新建虚拟机、安装系统过程略
+</code></pre><h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>配置软件源，官方源太慢我用的是阿里云的镜像源<br>地址是  <a href="http://mirrors.aliyun.com/" target="_blank" rel="external">http://mirrors.aliyun.com/</a></p>
 ]]></content>
     </entry>
     
     <entry>
       <title><![CDATA[博客迁移github原先文章陆续恢复中]]></title>
       <url>http://www.3glong.com/2016/08/28/blog-transfer/</url>
-      <content type="html"><![CDATA[<p>\<excerpt in="" index="" |="" 首页摘要\=""><br><code>markdown</code>目前还不大熟，之前文章正陆续整理。<br><a id="more"></a><br>\<the rest="" of="" contents="" |="" 余下全文\=""></the></excerpt></p>
+      <content type="html"><![CDATA[<p><excerpt in="" index="" |="" 首页摘要=""><br><code>markdown</code>目前还不大熟，之前文章正陆续整理。<br><a id="more"></a></excerpt></p>
+<p><the rest="" of="" contents="" |="" 余下全文\=""></the></p>
 <h2 id="博客迁移至github"><a href="#博客迁移至github" class="headerlink" title="博客迁移至github"></a>博客迁移至github</h2><p><code>markdown</code>目前还不大熟，之前文章正陆续整理。</p>
 <h2 id="hexo常用命令"><a href="#hexo常用命令" class="headerlink" title="hexo常用命令"></a>hexo常用命令</h2><p>创建一篇名为helloword的文章<br><code>hexo new helloworld</code><br>更新<br><code>hexo generate</code><br>启动本地服务器预览<br><code>hexo server</code><br>部署<br><code>hexo deploy</code></p>
 ]]></content>
