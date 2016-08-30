@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Yunlong Zhou" />
+
+
+
+<meta name="description" content="GlusterFS 是一个集群的文件系统，支持 PB 级的数据量。GlusterFS 通过 RDMA 和 TCP/IP 方式将分布到不同服务器上的存储空间汇集成一个大的网络并行文件系统。+">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介">
+<meta property="og:url" content="http://www.3glong.com/2016/08/30/glusterfs/index.html">
+<meta property="og:site_name" content="幽龙博客">
+<meta property="og:description" content="GlusterFS 是一个集群的文件系统，支持 PB 级的数据量。GlusterFS 通过 RDMA 和 TCP/IP 方式将分布到不同服务器上的存储空间汇集成一个大的网络并行文件系统。+">
+<meta property="og:updated_time" content="2016-08-30T01:15:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介">
+<meta name="twitter:description" content="GlusterFS 是一个集群的文件系统，支持 PB 级的数据量。GlusterFS 通过 RDMA 和 TCP/IP 方式将分布到不同服务器上的存储空间汇集成一个大的网络并行文件系统。+">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="幽龙博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介 | 幽龙博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57c266e9514005e6"></script>
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?e59ad254fa9cdc22760c1836194edf99";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Yunlong Zhou</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos7-2/">Centos7.2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GlusteFS/">GlusteFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openSUSE/">openSUSE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallels-desktop/">parallels desktop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proc/">proc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/双网卡/">双网卡</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.linuxe.cn/">linux运维</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.bowenguangji.cc">博闻广记</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://zgboke.com">中国博客联盟</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.fity.cn">未来往事</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://d-prototype.com/">Adamhuan&#39;s</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.seopupil.com">seopupil博客</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.nginx.cn/">nginx中文站</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">折腾路上</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Yunlong Zhou</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Yunlong Zhou</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-glusterfs" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/30/glusterfs/" class="article-date">
+      <time datetime="2016-08-29T23:45:24.000Z" itemprop="datePublished">2016-08-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a><a class="article-category-link" href="/categories/Linux/储存/">储存</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Centos7-2/">Centos7.2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GlusteFS/">GlusteFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><excerpt in="" index="" |="" 首页摘要=""><br>GlusterFS 是一个集群的文件系统，支持 PB 级的数据量。GlusterFS 通过 RDMA 和 TCP/IP 方式将分布到不同服务器上的存储空间汇集成一个大的网络并行文件系统。+<a id="more"></a></excerpt></p>
+<the rest="" of="" contents="" |="" 余下全文="">
+
+<p><code>实验环境:</code> 准备七台虚拟机各额外添加三块硬盘<br>关闭selinux   关闭防火墙<br><code>系统环境:</code> centos7.2  最小化安装<br>更改主机名和hosts文件实现个主机互相解析<br>172.16.8.145 node1.3glong.com<br>172.16.8.146 node2.3glong.com<br>172.16.8.147 node3.3glong.com<br>172.16.8.148 node4.3glong.com<br>172.16.8.149 node5.3glong.com<br>172.16.8.150 node6.3glong.com<br>172.16.8.151 client.3glong.com</p>
+<ul>
+<li>新加三块硬盘<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># lsblk</span></div><div class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">sda               8:0    0   20G  0 disk </div><div class="line">├─sda1            8:1    0  500M  0 part /boot</div><div class="line">└─sda2            8:2    0 19.5G  0 part </div><div class="line">  ├─centos-root 253:0    0 17.5G  0 lvm  /</div><div class="line">  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]</div><div class="line">sdb               8:16   0  200G  0 disk </div><div class="line">sdc               8:32   0  200G  0 disk </div><div class="line">sdd               8:48   0  200G  0 disk </div><div class="line">sr0              11:0    1 1024M  0 rom  </div><div class="line">硬盘格式化及开机自动挂载</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="硬盘分区"><a href="#硬盘分区" class="headerlink" title="硬盘分区"></a>硬盘分区</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "mkfs.xfs -i size=512 /dev/sdb"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "mkfs.xfs -i size=512 /dev/sdc"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "mkfs.xfs -i size=512 /dev/sdd"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "mkdir -p /glusterfs/&#123;sdb,sdc,sdd&#125;"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "echo /dev/sdb /glusterfs/sdb xfs defaults 0 0 &gt;&gt; /etc/fstab"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "echo /dev/sdc /glusterfs/sdc xfs defaults 0 0 &gt;&gt; /etc/fstab"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "echo /dev/sdd /glusterfs/sdd xfs defaults 0 0 &gt;&gt; /etc/fstab"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "mount -a"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "lsblk"</span></div><div class="line">[1] 20:41:01 [SUCCESS] 172.16.8.145</div><div class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">sda               8:0    0   20G  0 disk </div><div class="line">├─sda1            8:1    0  500M  0 part /boot</div><div class="line">└─sda2            8:2    0 19.5G  0 part </div><div class="line">  ├─centos-root 253:0    0 17.5G  0 lvm  /</div><div class="line">  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]</div><div class="line">sdb               8:16   0  200G  0 disk /glusterfs/sdb</div><div class="line">sdc               8:32   0  200G  0 disk /glusterfs/sdc</div><div class="line">sdd               8:48   0  200G  0 disk /glusterfs/sdd</div><div class="line">sr0              11:0    1 1024M  0 rom  </div><div class="line">[2] 20:41:01 [SUCCESS] 172.16.8.147</div><div class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">sda               8:0    0   20G  0 disk </div><div class="line">├─sda1            8:1    0  500M  0 part /boot</div><div class="line">└─sda2            8:2    0 19.5G  0 part </div><div class="line">  ├─centos-root 253:0    0 17.5G  0 lvm  /</div><div class="line">  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]</div><div class="line">sdb               8:16   0  200G  0 disk /glusterfs/sdb</div><div class="line">sdc               8:32   0  200G  0 disk /glusterfs/sdc</div><div class="line">sdd               8:48   0  200G  0 disk /glusterfs/sdd</div><div class="line">sr0              11:0    1 1024M  0 rom  </div><div class="line">[3] 20:41:01 [SUCCESS] 172.16.8.146</div><div class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">sda               8:0    0   20G  0 disk </div><div class="line">├─sda1            8:1    0  500M  0 part /boot</div><div class="line">└─sda2            8:2    0 19.5G  0 part </div><div class="line">  ├─centos-root 253:0    0 17.5G  0 lvm  /</div><div class="line">  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]</div><div class="line">sdb               8:16   0  200G  0 disk /glusterfs/sdb</div><div class="line">sdc               8:32   0  200G  0 disk /glusterfs/sdc</div><div class="line">sdd               8:48   0  200G  0 disk /glusterfs/sdd</div><div class="line">sr0              11:0    1 1024M  0 rom  </div><div class="line">[4] 20:41:01 [SUCCESS] 172.16.8.150</div><div class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">sda               8:0    0   20G  0 disk </div><div class="line">├─sda1            8:1    0  500M  0 part /boot</div><div class="line">└─sda2            8:2    0 19.5G  0 part </div><div class="line">  ├─centos-root 253:0    0 17.5G  0 lvm  /</div><div class="line">  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]</div><div class="line">sdb               8:16   0  200G  0 disk /glusterfs/sdb</div><div class="line">sdc               8:32   0  200G  0 disk /glusterfs/sdc</div><div class="line">sdd               8:48   0  200G  0 disk /glusterfs/sdd</div><div class="line">sr0              11:0    1 1024M  0 rom  </div><div class="line">[5] 20:41:01 [SUCCESS] 172.16.8.148</div><div class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">sda               8:0    0   20G  0 disk </div><div class="line">├─sda1            8:1    0  500M  0 part /boot</div><div class="line">└─sda2            8:2    0 19.5G  0 part </div><div class="line">  ├─centos-root 253:0    0 17.5G  0 lvm  /</div><div class="line">  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]</div><div class="line">sdb               8:16   0  200G  0 disk /glusterfs/sdb</div><div class="line">sdc               8:32   0  200G  0 disk /glusterfs/sdc</div><div class="line">sdd               8:48   0  200G  0 disk /glusterfs/sdd</div><div class="line">sr0              11:0    1 1024M  0 rom  </div><div class="line">[6] 20:41:01 [SUCCESS] 172.16.8.149</div><div class="line">NAME            MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</div><div class="line">sda               8:0    0   20G  0 disk </div><div class="line">├─sda1            8:1    0  500M  0 part /boot</div><div class="line">└─sda2            8:2    0 19.5G  0 part </div><div class="line">  ├─centos-root 253:0    0 17.5G  0 lvm  /</div><div class="line">  └─centos-swap 253:1    0    2G  0 lvm  [SWAP]</div><div class="line">sdb               8:16   0  200G  0 disk /glusterfs/sdb</div><div class="line">sdc               8:32   0  200G  0 disk /glusterfs/sdc</div><div class="line">sdd               8:48   0  200G  0 disk /glusterfs/sdd</div><div class="line">sr0              11:0    1 1024M  0 rom</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "yum install -y http://mirrors.aliyun.com/epel/epel-release-latest-7.noarch.rpm"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "yum install -y curl http://download.gluster.org/pub/gluster/glusterfs/LATEST/EPEL.repo/glusterfs-epel.repo -o /etc/yum.repos.d/glusterfs-epel.repo"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "yum -y install glusterfs-server samba"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "systemctl enable glusterd.service"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "systemctl enable rpcbind"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "systemctl restart rpcbind"</span></div><div class="line">[root@client ~]<span class="comment"># pssh -h ip.txt -i "systemctl start glusterd.service"</span></div><div class="line"></div><div class="line">切换至任意节点</div><div class="line">[root@node1 ~]<span class="comment"># gluster peer probe node2.3glong.com</span></div><div class="line">peer probe: success. </div><div class="line">[root@node1 ~]<span class="comment"># gluster peer probe node3.3glong.com</span></div><div class="line">peer probe: success. </div><div class="line">[root@node1 ~]<span class="comment"># gluster peer probe node4.3glong.com</span></div><div class="line">peer probe: success. </div><div class="line">[root@node1 ~]<span class="comment"># gluster peer probe node5.3glong.com</span></div><div class="line">peer probe: success. </div><div class="line">[root@node1 ~]<span class="comment"># gluster peer probe node6.3glong.com</span></div><div class="line">peer probe: success. </div><div class="line">[root@node1 ~]<span class="comment"># gluster peer status</span></div><div class="line">Number of Peers: 5</div><div class="line"></div><div class="line">Hostname: node2.3glong.com</div><div class="line">Uuid: ecdfd9e1-6695-4b16-92de-815b598fd8e4</div><div class="line">State: Peer <span class="keyword">in</span> Cluster (Connected)</div><div class="line"></div><div class="line">Hostname: node3.3glong.com</div><div class="line">Uuid: 39029856-dd70-4134-b636-5d013218327f</div><div class="line">State: Peer <span class="keyword">in</span> Cluster (Connected)</div><div class="line"></div><div class="line">Hostname: node4.3glong.com</div><div class="line">Uuid: cb52ef8b-1db5-4639-aa31-19788e4f65c3</div><div class="line">State: Peer <span class="keyword">in</span> Cluster (Connected)</div><div class="line"></div><div class="line">Hostname: node5.3glong.com</div><div class="line">Uuid: f8107ca5-1381-4411-baf6-6dc859d6e2eb</div><div class="line">State: Peer <span class="keyword">in</span> Cluster (Connected)</div><div class="line"></div><div class="line">Hostname: node6.3glong.com</div><div class="line">Uuid: 520e4057-1c29-4981-98c8<span class="_">-d</span>9ef1abf51a4</div><div class="line">State: Peer <span class="keyword">in</span> Cluster (Connected)</div><div class="line">[root@node1 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<h3 id="分布式卷"><a href="#分布式卷" class="headerlink" title="分布式卷"></a>分布式卷</h3><blockquote>
+<p>分布卷也称为哈希卷，多个文件在多个 brick 上使用哈希算法随机存储。<br>应用场景:   大量小文件<br>优点：       读/写性能好<br>缺点：       如果存储或服务器故障，数据将丢失<br>不指定卷类型，默认是分布卷<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># gluster volume create dis_vol \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/dv1 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/dv1 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/dv1</div><div class="line">volume create: dis_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info dis_vol</span></div><div class="line"> </div><div class="line">Volume Name: dis_vol</div><div class="line">Type: Distribute</div><div class="line">Volume ID: 2a4af66a-1f10-4af7-b103-bf2425ce2c45</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 3</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/dv1</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/dv1</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/dv1</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="条带卷"><a href="#条带卷" class="headerlink" title="条带卷"></a>条带卷</h3><blockquote>
+<p>类似与RAID0<br>将文件分成条带，存放在多个 brick上，默认条带大小128K<br>应用场景:   大文件<br>优点：       适用于大文件存储<br>缺点：       可靠性低，brick 故障会导致数据全部丢失</p>
+<p>stripe = brick<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@node1 ~]<span class="comment"># gluster volume create str_vol stripe 3 \</span></div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/sv3 \</div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/sv3 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/sv3</div><div class="line">volume create: str_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info str_vol</span></div><div class="line"> </div><div class="line">Volume Name: str_vol</div><div class="line">Type: Stripe</div><div class="line">Volume ID: 52c3269d-7145-4<span class="built_in">fc</span>5-abfb-75e30d091ef6</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 1 x 3 = 3</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node2.3glong.com:/glusterfs/sdb/sv3</div><div class="line">Brick2: node1.3glong.com:/glusterfs/sdb/sv3</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/sv3</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="复制卷"><a href="#复制卷" class="headerlink" title="复制卷"></a>复制卷</h3><blockquote>
+<p>类似于  RAID1<br>多个文件在多个brick上复制多份，brick 的数目要与需要复制的份数相等，建议brick分布在不同的服务器上。<br>应用场景:   对可靠性和读性能要求高的场景<br>优点：       读性能好<br>缺点：       写性能差</p>
+<p>replica = brick<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># gluster volume create rep_vol replica 3 \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/rv2 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/rv2 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/rv2</div><div class="line">volume create: rep_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info rep_vol</span></div><div class="line"> </div><div class="line">Volume Name: rep_vol</div><div class="line">Type: Replicate</div><div class="line">Volume ID: 9607e500-7bf1-4460-982e-57ef3caa9ff3</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 1 x 3 = 3</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/rv2</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/rv2</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/rv2</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="分布式条带卷"><a href="#分布式条带卷" class="headerlink" title="分布式条带卷"></a>分布式条带卷</h3><blockquote>
+<p>多个文件在多个节点哈希存储，每个文件再分条带在多个brick上存储<br>应用场景:   读/写性能高的大量大文件场景<br>优点：       高并发支持<br>缺点：       没有冗余，可靠性差</p>
+<p>brick 数是 stripe 的倍数</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># gluster volume create dir_str_vol stripe 4 \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/dsv4 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/dsv4 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/dsv4 \</div><div class="line">&gt; node4.3glong.com:/glusterfs/sdb/dsv4 \</div><div class="line">&gt; node5.3glong.com:/glusterfs/sdb/dsv4 \</div><div class="line">&gt; node6.3glong.com:/glusterfs/sdb/dsv4 \</div><div class="line">&gt; node1.3glong.com:/glusterfs/sdc/dsv4 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdc/dsv4</div><div class="line">volume create: dir_str_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info dir_str_vol</span></div><div class="line"> </div><div class="line">Volume Name: dir_str_vol</div><div class="line">Type: Distributed-Stripe</div><div class="line">Volume ID: f05a1acb-ec28-40fd-aa57-c7562715a218</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 2 x 4 = 8</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/dsv4</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/dsv4</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/dsv4</div><div class="line">Brick4: node4.3glong.com:/glusterfs/sdb/dsv4</div><div class="line">Brick5: node5.3glong.com:/glusterfs/sdb/dsv4</div><div class="line">Brick6: node6.3glong.com:/glusterfs/sdb/dsv4</div><div class="line">Brick7: node1.3glong.com:/glusterfs/sdc/dsv4</div><div class="line">Brick8: node2.3glong.com:/glusterfs/sdc/dsv4</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure>
+<h3 id="分布式复制卷"><a href="#分布式复制卷" class="headerlink" title="分布式复制卷"></a>分布式复制卷</h3><blockquote>
+<p>多个文件在多个节点哈希存储，在多个brick 复制多份存储。<br>应用场景:   大量文件读和可靠性要求高的场景<br>优点：       高可靠性，读性能高<br>缺点：       牺牲存储空间，写性能差</p>
+<p>brick 数量是 replica 的倍数<br>多个文件存储的时候在4个 brick 上哈希存储，每个文件存储 2份</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># gluster volume create dir_rep_vol replica 2 \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/drv5 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/drv5 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/drv5 \</div><div class="line">&gt; node4.3glong.com:/glusterfs/sdb/drv5 \</div><div class="line">&gt; node5.3glong.com:/glusterfs/sdb/drv5 \</div><div class="line">&gt; node6.3glong.com:/glusterfs/sdb/drv5 \</div><div class="line">&gt; node1.3glong.com:/glusterfs/sdc/drv5 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdc/drv5</div><div class="line">volume create: dir_rep_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info dir_rep_vol</span></div><div class="line"> </div><div class="line">Volume Name: dir_rep_vol</div><div class="line">Type: Distributed-Replicate</div><div class="line">Volume ID: a3562200-8911-4c7f-bc2c-ce79c491236d</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 4 x 2 = 8</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/drv5</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/drv5</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/drv5</div><div class="line">Brick4: node4.3glong.com:/glusterfs/sdb/drv5</div><div class="line">Brick5: node5.3glong.com:/glusterfs/sdb/drv5</div><div class="line">Brick6: node6.3glong.com:/glusterfs/sdb/drv5</div><div class="line">Brick7: node1.3glong.com:/glusterfs/sdc/drv5</div><div class="line">Brick8: node2.3glong.com:/glusterfs/sdc/drv5</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure>
+<h3 id="分布式条带复制卷"><a href="#分布式条带复制卷" class="headerlink" title="分布式条带复制卷"></a>分布式条带复制卷</h3><blockquote>
+<p>多个大文件在多个节点哈希存储，存储时分成条带，并且保存多份。<br>应用场景:   大量大文件并且对可靠性要求高的场景<br>优点：       读/写/可靠性比较均衡<br>缺点：       牺牲存储空间，写性能相对差</p>
+<p>brick 的数量是 stripe、replica 的乘积的倍数<br>多个文件存储的时候在 4 组 brick 上哈希存储，每个文件存储2份，并且划分条带。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@node1 ~]<span class="comment"># gluster volume create dis_str_rep_vol stripe 2 replica 2 \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/dsrv6 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/dsrv6 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/dsrv6 \</div><div class="line">&gt; node4.3glong.com:/glusterfs/sdb/dsrv6 \</div><div class="line">&gt; node5.3glong.com:/glusterfs/sdb/dsrv6 \</div><div class="line">&gt; node6.3glong.com:/glusterfs/sdb/dsrv6 \</div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/dsrv6 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdc/dsrv6</div><div class="line">volume create: dis_str_rep_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info dis_str_rep_vol</span></div><div class="line"> </div><div class="line">Volume Name: dis_str_rep_vol</div><div class="line">Type: Distributed-Striped-Replicate</div><div class="line">Volume ID: 0c4596ed-988c-4b36-8955-c10beea7ddf3</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 2 x 2 x 2 = 8</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/dsrv6</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/dsrv6</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/dsrv6</div><div class="line">Brick4: node4.3glong.com:/glusterfs/sdb/dsrv6</div><div class="line">Brick5: node5.3glong.com:/glusterfs/sdb/dsrv6</div><div class="line">Brick6: node6.3glong.com:/glusterfs/sdb/dsrv6</div><div class="line">Brick7: node1.3glong.com:/glusterfs/sdc/dsrv6</div><div class="line">Brick8: node2.3glong.com:/glusterfs/sdc/dsrv6</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="条带复制卷"><a href="#条带复制卷" class="headerlink" title="条带复制卷"></a>条带复制卷</h3><blockquote>
+<p>一个大文件存储的时候划分条带，并且保存多份。<br>应用场景:   超大文件，并且对可靠性要求高<br>优点：       大文件存储，可靠性高<br>缺点：       牺牲存储空间，写性能差</p>
+<p>brick 的数量是 stripe、replica 的乘积</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># gluster volume create str_rep_vol stripe 2 replica 2 \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/srv7 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/srv7 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/srv7 \</div><div class="line">&gt; node4.3glong.com:/glusterfs/sdb/srv7</div><div class="line">volume create: str_rep_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info str_rep_vol</span></div><div class="line"> </div><div class="line">Volume Name: str_rep_vol</div><div class="line">Type: Striped-Replicate</div><div class="line">Volume ID: ec0d735c-7183-4338-9efd<span class="_">-e</span>11db55b72de</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 1 x 2 x 2 = 4</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/srv7</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/srv7</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/srv7</div><div class="line">Brick4: node4.3glong.com:/glusterfs/sdb/srv7</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure>
+<h3 id="分散卷"><a href="#分散卷" class="headerlink" title="分散卷"></a>分散卷</h3><p><code>类似于RAID5</code></p>
+<blockquote>
+<p>分散卷基于校验码，它基于条带编码，并分布到多个brick上存储。<br>应用场景:   对冗余和磁盘空间都敏感的场景<br>优点：       在冗余和磁盘空间上取得平衡<br>缺点：       要求消耗额外的资源进行验证，对性能有一定的影响</p>
+<p>分散卷需要指定冗余 brick 数理，冗余数要小于 brick 数量。例如创建一个 4 个brick 冗余的分散数，<br>最多允许1个brick故障而不丢失数据。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># gluster volume create disperse_vol disperse 4 \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/d8 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/d8 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/d8 \</div><div class="line">&gt; node4.3glong.com:/glusterfs/sdb/d8 </div><div class="line">There isn<span class="string">'t an optimal redundancy value for this configuration. Do you want to create the volume with redundancy 1 ? (y/n) y</span></div><div class="line">volume create: disperse_vol: success: please start the volume to access data</div><div class="line">[root@node1 ~]# gluster volume info disperse_vol</div><div class="line"> </div><div class="line">Volume Name: disperse_vol</div><div class="line">Type: Disperse</div><div class="line">Volume ID: 091d1eba-53fa-4f6c-9056-a31f94b7a441</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 1 x (3 + 1) = 4</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/d8</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/d8</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/d8</div><div class="line">Brick4: node4.3glong.com:/glusterfs/sdb/d8</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure>
+<h3 id="分布式分散卷"><a href="#分布式分散卷" class="headerlink" title="分布式分散卷"></a>分布式分散卷</h3><p><code>类似于RAID6</code></p>
+<blockquote>
+<p>分布分散卷，多个文件在多个节点上哈希分布存储，存储的时候基于条带校验码并有冗余度设置<br>应用场景:   对冗余和磁盘空间都敏感的场景<br>优点：       在冗余、磁盘空间、读/写性能上取得平衡<br>缺点：       要求消耗额外的资源进行验证，对性能有一定的影响</p>
+<p>5个brick分布分散卷，最多允许2个brick故障而不数据丢失</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">[root@node1 ~]<span class="comment"># gluster volume create disperse_vol3 disperse 3 \</span></div><div class="line">&gt; node1.3glong.com:/glusterfs/sdb/d9 \</div><div class="line">&gt; node2.3glong.com:/glusterfs/sdb/d9 \</div><div class="line">&gt; node3.3glong.com:/glusterfs/sdb/d9 \</div><div class="line">&gt; node4.3glong.com:/glusterfs/sdb/d9 \</div><div class="line">&gt; node5.3glong.com:/glusterfs/sdb/d9 \</div><div class="line">&gt; node6.3glong.com:/glusterfs/sdb/d9</div><div class="line">volume create: disperse_vol3: success: please start the volume to access data</div><div class="line">[root@node1 ~]<span class="comment"># gluster volume info disperse_vol3</span></div><div class="line"> </div><div class="line">Volume Name: disperse_vol3</div><div class="line">Type: Distributed-Disperse</div><div class="line">Volume ID: a86a3491-701f-4ba8-8651-50d7b1bfc7b5</div><div class="line">Status: Created</div><div class="line">Number of Bricks: 2 x (2 + 1) = 6</div><div class="line">Transport-type: tcp</div><div class="line">Bricks:</div><div class="line">Brick1: node1.3glong.com:/glusterfs/sdb/d9</div><div class="line">Brick2: node2.3glong.com:/glusterfs/sdb/d9</div><div class="line">Brick3: node3.3glong.com:/glusterfs/sdb/d9</div><div class="line">Brick4: node4.3glong.com:/glusterfs/sdb/d9</div><div class="line">Brick5: node5.3glong.com:/glusterfs/sdb/d9</div><div class="line">Brick6: node6.3glong.com:/glusterfs/sdb/d9</div><div class="line">Options Reconfigured:</div><div class="line">performance.readdir-ahead: on</div></pre></td></tr></table></figure></the>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/08/30/glusterfs/">Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Yunlong Zhou</a></p>
+        <p><span>发布时间:</span>2016-08-30, 07:45:24</p>
+        <p><span>最后更新:</span>2016-08-30, 09:15:22</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/08/30/glusterfs/" title="Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介">http://www.3glong.com/2016/08/30/glusterfs/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://www.3glong.com/2016/08/30/glusterfs/　　作者: Yunlong Zhou" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+
+
+        <span>更新历史:</span><i class="fa fa-github"></i>
+        <!-- 不同功能替换前面超链接即可，文件名不变 -->
+        <!-- 文件名生成: 2016-08-30"-"glusterfs -->
+        <a href="https://github.com/i3glong/blog_markdown-backup/blame/master/_posts/2016-08-30-glusterfs.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+        <a href="https://github.com/i3glong/blog_markdown-backup/commits/master/_posts/2016-08-30-glusterfs.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">&nbsp&nbsp&nbsp文本模式:</span><i class="fa fa-file-text-o"></i> 
+        <a href="https://raw.githubusercontent.com/i3glong/blog_markdown-backup/master/_posts/2016-08-30-glusterfs.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="CC BY-NC-SA 3.0 CN" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+        
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/29/linux-dual-network/">
+                    解决LINUX 双网卡无法上网问题小记
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘分区"><span class="toc-number">1.</span> <span class="toc-text">硬盘分区</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式卷"><span class="toc-number">1.1.</span> <span class="toc-text">分布式卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条带卷"><span class="toc-number">1.2.</span> <span class="toc-text">条带卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制卷"><span class="toc-number">1.3.</span> <span class="toc-text">复制卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式条带卷"><span class="toc-number">1.4.</span> <span class="toc-text">分布式条带卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式复制卷"><span class="toc-number">1.5.</span> <span class="toc-text">分布式复制卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式条带复制卷"><span class="toc-number">1.6.</span> <span class="toc-text">分布式条带复制卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条带复制卷"><span class="toc-number">1.7.</span> <span class="toc-text">条带复制卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分散卷"><span class="toc-number">1.8.</span> <span class="toc-text">分散卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式分散卷"><span class="toc-number">1.9.</span> <span class="toc-text">分布式分散卷</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+
+    
+        <div class="addthis_sharing_toolbox"></div>
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/30/glusterfs/" data-title="Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介" data-url="http://www.3glong.com/2016/08/30/glusterfs/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"suselinux"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//www.3glong.com/js/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/29/linux-dual-network/" title="下一篇: 解决LINUX 双网卡无法上网问题小记">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/30/glusterfs/">Centos7.2搭建GlusterFS集群文件系统及九种储存卷简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/linux-dual-network/">解决LINUX 双网卡无法上网问题小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/proc-img/">Linux下proc目录详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/linux-file-command/">linux文件管理命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/29/pd-opensuse/">Mac下parallels desktop安装openSUSE过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/28/blog-transfer/">博客迁移github原先文章陆续恢复中</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016 Yunlong Zhou
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 1;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+             categories: ".article-category a, a.tag-list-link", 
+             articleNav: "#article-nav a, #post-nav-button a", 
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+             menu: ".header-menu a", 
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
